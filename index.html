@@ -339,7 +339,8 @@ Constants: Nₐ = 6.022×10²³ ; ln 2 = 0.6931… ; dA is the percent uncertain
   </section>
 
   <footer>
-    Based on csadaka2/meteorites: <code>Leya&amp;Mas2009_model</code> and <code>chlore_terr_ages</code>.
+    Based on csadaka2/meteorites: <code>Leya&amp;Mas2009_model</code> and <code>chlore_terr_ages</code>.<br>
+    Built with <a href="https://claude.com/claude-code" target="_blank" rel="noopener">Claude Code</a>.
   </footer>
 </main>
 
@@ -370,19 +371,20 @@ const LN2 = Math.LN2;
 const NA = 6.022e23;
 const MIN_PER_YEAR = 365 * 24 * 60;
 
+// Illustrative example values (anonymized — realistic ranges, not real sample identifiers)
 const EXAMPLE_COMPO = `Sample;Fe;Ni
-Calama 003;0,906;0,094
-Calama 027;0,910;0,090
-Calama 108;0,702;0,298
-Calama 109;0,924;0,076
-Calama 123;0,915;0,085`;
+meteorite_1;0,906;0,094
+meteorite_2;0,910;0,090
+meteorite_3;0,702;0,298
+meteorite_4;0,924;0,076
+meteorite_5;0,915;0,085`;
 
 const EXAMPLE_MEAS = `Sample;metal;spike;36Cl/35Cl;incert_36/35
-Calama 003;0,04896829;0,34554;6,22E-12;3,4627
-Calama 027;0,039570778;0,33297;3,45E-12;3,6785
-Calama 108;0,005070856;0,3439;4,75E-13;4,5
-Calama 109;0,049761847;0,3349;5,24E-12;3,4089
-Calama 123;0,08098118;0,33763;1,00E-11;3,3928`;
+meteorite_1;0,04896829;0,34554;6,22E-12;3,4627
+meteorite_2;0,039570778;0,33297;3,45E-12;3,6785
+meteorite_3;0,005070856;0,3439;4,75E-13;4,5
+meteorite_4;0,049761847;0,3349;5,24E-12;3,4089
+meteorite_5;0,08098118;0,33763;1,00E-11;3,3928`;
 
 // ----- in-memory state -----
 let step1Results = null;  // Map: Sample -> A_sat
