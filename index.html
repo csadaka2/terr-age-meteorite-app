@@ -29,21 +29,16 @@
   main { max-width: 1100px; margin: 0 auto; }
   .banner {
     width: 100%;
-    height: 220px;
-    margin: 0 0 1.5rem;
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
     overflow: hidden;
     border-radius: 6px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    background: #1a1a1a;
   }
   .banner img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: center;
+    width: 100%;
+    height: auto;
     display: block;
-  }
-  @media (max-width: 640px) {
-    .banner { height: 140px; }
   }
   h1 { font-size: 1.55rem; margin: 0 0 0.25rem; font-weight: 600; }
   .subtitle { color: var(--muted); margin: 0 0 1.5rem; font-size: 0.95rem; }
@@ -191,10 +186,10 @@
   <div class="banner">
     <img src="assets/Meteorite_Atacama.JPG" alt="Meteorite from the Atacama desert">
   </div>
-  <h1>36Cl Terrestrial Age Calculator</h1>
+  <h1>Meteorite Terrestrial Age Calculator (36Cl-based) </h1>
   <p class="subtitle">
-    Stony meteorites &middot; metal extracts &middot; A<sub>sat</sub> from Leya &amp; Masarik (<a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1945-5100.2009.tb00788.x" target="_blank" rel="noopener">2009</a>) &middot;
-    age via <code>t = (T<sub>½</sub>/ln 2) · ln((A<sub>sat</sub> − A<sub>T</sub>)/(A<sub>meas</sub> − A<sub>T</sub>))</code>
+    Stony meteorites &middot; Purified metal fraction &middot; A<sub>sat</sub> from Leya &amp; Masarik (<a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1945-5100.2009.tb00788.x" target="_blank" rel="noopener">2009</a>) &middot;
+    Age via <code>t = (T<sub>½</sub>/ln 2) · ln((A<sub>sat</sub> − A<sub>T</sub>)/(A<sub>meas</sub> − A<sub>T</sub>))</code>
   </p>
 
   <!-- ===================== STEP 1 ===================== -->
@@ -224,7 +219,7 @@
     </div>
     <p class="help" id="depthHelp"></p>
 
-    <h3>Composition CSV — columns: <code>Sample; Fe; Ni</code></h3>
+    <h3>Composition CSV — columns: <code>Sample; Fe/Ni+Fe; Ni/Ni+Fe</code></h3>
     <textarea id="compoInput" placeholder="Sample;Fe;Ni
 meteorite_1;0,906;0,094
 meteorite_2;0,910;0,090"></textarea>
