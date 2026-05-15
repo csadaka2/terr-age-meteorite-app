@@ -29,21 +29,16 @@
   main { max-width: 1100px; margin: 0 auto; }
   .banner {
     width: 100%;
-    height: 220px;
-    margin: 0 0 1.5rem;
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
     overflow: hidden;
     border-radius: 6px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    background: #1a1a1a;
   }
   .banner img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: center;
+    width: 100%;
+    height: auto;
     display: block;
-  }
-  @media (max-width: 640px) {
-    .banner { height: 140px; }
   }
   h1 { font-size: 1.55rem; margin: 0 0 0.25rem; font-weight: 600; }
   .subtitle { color: var(--muted); margin: 0 0 1.5rem; font-size: 0.95rem; }
@@ -193,7 +188,7 @@
   </div>
   <h1>Meteorite Terrestrial Age Calculator (36Cl-based) </h1>
   <p class="subtitle">
-    Stony meteorites &middot; Purified metal fraction &middot; A<sub>sat</sub> from Leya &amp; Masarik (<a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1945-5100.2009.tb00788.x" target="_blank" rel="noopener">2009</a>) &middot;
+    Stony meteorites &middot; Purified metal fraction &middot; Activity at saturation A<sub>sat</sub> from Leya &amp; Masarik (<a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1945-5100.2009.tb00788.x" target="_blank" rel="noopener">2009</a>) &middot;
     Age via <code>t = (T<sub>½</sub>/ln 2) · ln((A<sub>sat</sub> − A<sub>T</sub>)/(A<sub>meas</sub> − A<sub>T</sub>))</code>
   </p>
 
@@ -226,8 +221,8 @@
 
     <h3>Composition CSV — columns: <code>Sample; Fe/Ni+Fe; Ni/Ni+Fe</code></h3>
     <textarea id="compoInput" placeholder="Sample;Fe;Ni
-meteorite_1;0,906;0,094
-meteorite_2;0,910;0,090"></textarea>
+meteorite_1;0.906;0.094
+meteorite_2;0.910;0.090"></textarea>
     <div class="controls">
       <label class="file-input-label" for="compoFile">Upload CSV…</label>
       <input type="file" id="compoFile" accept=".csv,.txt">
@@ -250,7 +245,7 @@ meteorite_2;0,910;0,090"></textarea>
       <h2>Terrestrial age from raw measurements</h2>
     </div>
     <p class="help" style="margin-top: 0;">
-      Calculates the activity (dpm/kg) from the measured <code>36Cl/35Cl</code> ratio from Accelerator Mass Spectrometry <code></code> via the mass of the added carrier (g), then propagates 1σ analytically.
+      Calculates the activity (dpm/kg) from the measured <code>36Cl/35Cl</code> ratio from Accelerator Mass Spectrometry data, <code></code> then propagates 1σ analytically.
     </p>
 
     <details>
@@ -310,16 +305,16 @@ meteorite_2;0,910;0,090"></textarea>
       <input type="number" id="asatConstant" value="23.7" step="0.1">
     </div>
 
-    <h3>Measurements CSV — columns: <code>Sample name; Metal mass (g); Carrier mass (g); 36Cl/35Cl; incert_36/35</code></h3>
+    <h3>Measurements CSV — columns: <code>Sample name; Metal mass (g); Carrier mass (g); 36Cl/35Cl; uncert_36/35</code></h3>
     <p class="help" style="margin-top: 0;">
-      <code>metal</code>, <code>carrier</code> in g &middot; <code>36Cl/35Cl</code> as the AMS atomic ratio &middot;
-      <code>incert_36/35</code> as a <strong>percent</strong> (relative uncertainty on the ratio).
-      A <code>prod_rate</code> column (dpm/kg) is accepted and used if you pick that source above.<br>
+      <code>Metal mass (g)</code>, <code>Carrier mass (g)</code>, <code>36Cl/35Cl</code> as the AMS atomic ratio &middot;
+      <code>uncert_36/35</code> as a <strong>percent</strong> (relative uncertainty on the ratio).
+      A <code>sat_act</code> column (dpm/kg) is accepted and used if you pick that source above.<br>
       <em>Note:</em> A<sub>T</sub> (terrestrial production of <sup>36</sup>Cl) is not a per-sample column — it is set as a global constant in the section above, since it is negligible compared to A<sub>sat</sub> and A<sub>meas</sub>.
     </p>
     <textarea id="measInput" placeholder="Sample;metal;carrier;36Cl/35Cl;incert_36/35
-meteorite_1;0,04896829;0,34554;6,22E-12;3,4627
-meteorite_2;0,039570778;0,33297;3,45E-12;3,6785"></textarea>
+meteorite_1;0.04896829;0.34554;6.22E-12;3.4627
+meteorite_2;0.039570778;0.33297;3.45E-12;3.6785"></textarea>
     <div class="controls">
       <label class="file-input-label" for="measFile">Upload CSV…</label>
       <input type="file" id="measFile" accept=".csv,.txt">
@@ -342,17 +337,17 @@ meteorite_2;0,039570778;0,33297;3,45E-12;3,6785"></textarea>
     A_sat = mean over d in [d_min, d_max] of  ( Fe · P_Fe(R, d) + Ni · P_Ni(R, d) )
 
 Step 2 — A_meas from the carrier:
-    N_spike = m_spike · C_spike · Nₐ / (1000 · M_Cl)
-    N_36Cl  = N_spike · (36Cl/35Cl)
+    N_carrier = m_carrier · C_carrier · Nₐ / (1000 · M_Cl)
+    N_36Cl  = N_carrier · (36Cl/35Cl)
     A_meas  = N_36Cl · ln 2 · 1000 / (365 · 24 · 60 · T_½ · m_metal)        [dpm/kg]
 
 Step 2 — Age and 1σ:
     t      = (T_½ / ln 2) · ln( (A_sat − A_T) / (A_meas − A_T) )
     σ_t²   = (T_½ / ln 2)² · [ (σ_Asat/A_sat)²
                               + (σ_mass/m_metal)²
-                              + (σ_spike/m_spike)²
+                              + (σ_carrier/m_carrier)²
                               + (dA/100)²
-                              + (σ_Cspike/C_spike)² ]
+                              + (σ_C_carrier/C_carrier)² ]
             + ( (T_½/ln 2 + t) · σ(T_½)/T_½ )²
 
 Constants: Nₐ = 6.022×10²³ ; ln 2 = 0.6931… ; dA is the percent uncertainty on the 36Cl/35Cl ratio.</div>
@@ -394,18 +389,18 @@ const MIN_PER_YEAR = 365 * 24 * 60;
 
 // Illustrative example values (anonymized — realistic ranges, not real sample identifiers)
 const EXAMPLE_COMPO = `Sample;Fe;Ni
-meteorite_1;0,906;0,094
-meteorite_2;0,910;0,090
-meteorite_3;0,702;0,298
-meteorite_4;0,924;0,076
-meteorite_5;0,915;0,085`;
+meteorite_1;0.906;0.094
+meteorite_2;0.910;0.090
+meteorite_3;0.702;0.298
+meteorite_4;0.924;0.076
+meteorite_5;0.915;0.085`;
 
 const EXAMPLE_MEAS = `Sample;metal;carrier;36Cl/35Cl;incert_36/35
-meteorite_1;0,04896829;0,34554;6,22E-12;3,4627
-meteorite_2;0,039570778;0,33297;3,45E-12;3,6785
-meteorite_3;0,005070856;0,3439;4,75E-13;4,5
-meteorite_4;0,049761847;0,3349;5,24E-12;3,4089
-meteorite_5;0,08098118;0,33763;1,00E-11;3,3928`;
+meteorite_1;0.04896829;0.34554;6.22E-12;3.4627
+meteorite_2;0.039570778;0.33297;3.45E-12;3.6785
+meteorite_3;0.005070856;0.3439;4.75E-13;4.5
+meteorite_4;0.049761847;0.3349;5.24E-12;3.4089
+meteorite_5;0.08098118;0.33763;1.00E-11;3.3928`;
 
 // ----- in-memory state -----
 let step1Results = null;  // Map: Sample -> A_sat
