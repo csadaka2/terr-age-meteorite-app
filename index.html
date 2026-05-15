@@ -245,7 +245,7 @@ meteorite_2;0,910;0,090"></textarea>
       <h2>Terrestrial age from raw measurements</h2>
     </div>
     <p class="help" style="margin-top: 0;">
-      Calculates the activity (dpm/kg) from the measured <code>36Cl/35Cl</code> ratio from Accelerator Mass Spectrometry <code></code> via the mass of the added spike (g), then propagates 1σ analytically.
+      Calculates the activity (dpm/kg) from the measured <code>36Cl/35Cl</code> ratio from Accelerator Mass Spectrometry <code></code> via the mass of the added carrier (g), then propagates 1σ analytically.
     </p>
 
     <details>
@@ -264,7 +264,7 @@ meteorite_2;0,910;0,090"></textarea>
           <input type="number" id="A_T" value="0.001" step="0.0001">
         </div>
         <div>
-          <label for="Cspike">C<sub>spike</sub> (mg/g)</label>
+          <label for="Cspike">C<sub>carrier</sub> (mg/g)</label>
           <input type="number" id="Cspike" value="6.00" step="0.01">
         </div>
         <div>
@@ -276,11 +276,11 @@ meteorite_2;0,910;0,090"></textarea>
           <input type="number" id="dmass" value="0.001" step="0.0001">
         </div>
         <div>
-          <label for="dspike">σ(m<sub>spike</sub>) (g)</label>
+          <label for="dspike">σ(m<sub>carrier</sub>) (g)</label>
           <input type="number" id="dspike" value="0.0001" step="0.00001">
         </div>
         <div>
-          <label for="dCspike">σ(C<sub>spike</sub>) (mg/g)</label>
+          <label for="dCspike">σ(C<sub>carrier</sub>) (mg/g)</label>
           <input type="number" id="dCspike" value="0.01" step="0.001">
         </div>
         <div>
@@ -305,13 +305,13 @@ meteorite_2;0,910;0,090"></textarea>
       <input type="number" id="asatConstant" value="23.7" step="0.1">
     </div>
 
-    <h3>Measurements CSV — columns: <code>Sample; metal; spike; 36Cl/35Cl; incert_36/35</code></h3>
+    <h3>Measurements CSV — columns: <code>Sample name; Metal mass (g); Carrier mass (g); 36Cl/35Cl; incert_36/35</code></h3>
     <p class="help" style="margin-top: 0;">
-      <code>metal</code>, <code>spike</code> in g &middot; <code>36Cl/35Cl</code> as the AMS atomic ratio &middot;
+      <code>metal</code>, <code>carrier</code> in g &middot; <code>36Cl/35Cl</code> as the AMS atomic ratio &middot;
       <code>incert_36/35</code> as a <strong>percent</strong> (relative uncertainty on the ratio).
       A <code>prod_rate</code> column (dpm/kg) is accepted and used if you pick that source above.
     </p>
-    <textarea id="measInput" placeholder="Sample;metal;spike;36Cl/35Cl;incert_36/35
+    <textarea id="measInput" placeholder="Sample;metal;carrier;36Cl/35Cl;incert_36/35
 meteorite_1;0,04896829;0,34554;6,22E-12;3,4627
 meteorite_2;0,039570778;0,33297;3,45E-12;3,6785"></textarea>
     <div class="controls">
@@ -335,7 +335,7 @@ meteorite_2;0,039570778;0,33297;3,45E-12;3,6785"></textarea>
       <div class="formula">Step 1 — A_sat (averaged over depth range at radius R):
     A_sat = mean over d in [d_min, d_max] of  ( Fe · P_Fe(R, d) + Ni · P_Ni(R, d) )
 
-Step 2 — A_meas from the spike:
+Step 2 — A_meas from the carrier:
     N_spike = m_spike · C_spike · Nₐ / (1000 · M_Cl)
     N_36Cl  = N_spike · (36Cl/35Cl)
     A_meas  = N_36Cl · ln 2 · 1000 / (365 · 24 · 60 · T_½ · m_metal)        [dpm/kg]
@@ -394,7 +394,7 @@ meteorite_3;0,702;0,298
 meteorite_4;0,924;0,076
 meteorite_5;0,915;0,085`;
 
-const EXAMPLE_MEAS = `Sample;metal;spike;36Cl/35Cl;incert_36/35
+const EXAMPLE_MEAS = `Sample;metal;carrier;36Cl/35Cl;incert_36/35
 meteorite_1;0,04896829;0,34554;6,22E-12;3,4627
 meteorite_2;0,039570778;0,33297;3,45E-12;3,6785
 meteorite_3;0,005070856;0,3439;4,75E-13;4,5
@@ -460,7 +460,7 @@ function parseCSV(text, requiredCols) {
     fe: ["fe"],
     ni: ["ni"],
     metal: ["metal", "m_metal", "mmetal"],
-    spike: ["spike", "m_spike", "mspike"],
+    carrier: ["carrier", "m_spike", "mspike"],
     "36cl/35cl": ["36cl/35cl", "36cl35cl", "ratio", "r"],
     "incert_36/35": ["incert_36/35", "incert3635", "sigma_ratio", "sigmar", "dr", "uncertainty"],
     prod_rate: ["prod_rate", "prodrate", "asat", "a_sat"],
@@ -650,7 +650,7 @@ $("step2Btn").addEventListener("click", () => {
 
   let parsed;
   try {
-    parsed = parseCSV($("measInput").value, ["sample", "metal", "spike", "36cl/35cl", "incert_36/35"]);
+    parsed = parseCSV($("measInput").value, ["sample", "metal", "carrier", "36cl/35cl", "incert_36/35"]);
   } catch (err) {
     $("step2Error").textContent = err.message;
     return;
@@ -663,7 +663,7 @@ $("step2Btn").addEventListener("click", () => {
   const out = parsed.rows.map((r) => {
     const Sample = getStr(r, "sample");
     const m_metal = getNum(r, "metal");
-    const m_spike = getNum(r, "spike");
+    const m_spike = getNum(r, "carrier");
     const ratio = getNum(r, "36cl/35cl");
     const dA_pct = getNum(r, "incert_36/35");
     let A_sat;
@@ -704,13 +704,13 @@ function readConstants() {
 function computeAgeRow({ Sample, m_metal, m_spike, ratio, dA_pct, A_sat }, k) {
   const base = { Sample, m_metal, m_spike, ratio, dA_pct, A_sat };
   if (!Sample) return { ...base, error: "missing sample name" };
-  for (const [name, v] of [["metal", m_metal], ["spike", m_spike], ["36Cl/35Cl", ratio], ["A_sat", A_sat]]) {
+  for (const [name, v] of [["metal", m_metal], ["carrier", m_spike], ["36Cl/35Cl", ratio], ["A_sat", A_sat]]) {
     if (!isFinite(v)) return { ...base, error: `missing/non-numeric ${name}` };
   }
   if (m_metal <= 0 || m_spike <= 0 || ratio <= 0 || A_sat <= 0) {
-    return { ...base, error: "metal, spike, ratio, A_sat must be > 0" };
+    return { ...base, error: "metal, carrier, ratio, A_sat must be > 0" };
   }
-  // Activity from spike (mirrors `activity()` in age_calculation.py)
+  // Activity from carrier (mirrors `activity()` in age_calculation.py)
   const Nspike = m_spike * k.Cs * NA / (1000 * k.MCl);
   const NCl = Nspike * ratio;
   const A_meas = NCl * LN2 * 1000 / (MIN_PER_YEAR * k.T * m_metal);
