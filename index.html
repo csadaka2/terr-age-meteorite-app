@@ -29,8 +29,7 @@
   main { max-width: 1100px; margin: 0 auto; }
   .banner {
     width: 100%;
-    max-width: 500px;
-    margin: 0 auto 1.5rem;
+    margin: 0 0 1.5rem;
     overflow: hidden;
     border-radius: 6px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
@@ -312,7 +311,7 @@ meteorite_2;0.910;0.090"></textarea>
       A <code>sat_act</code> column (dpm/kg) is accepted and used if you pick that source above.<br>
       <em>Note:</em> A<sub>T</sub> (terrestrial production of <sup>36</sup>Cl) is not a per-sample column, it is set as a global constant in the section above, since it is negligible compared to A<sub>sat</sub> and A<sub>meas</sub>.
     </p>
-    <textarea id="measInput" placeholder="Sample;metal;carrier;36Cl/35Cl;incert_36/35
+    <textarea id="measInput" placeholder="Sample;metal;carrier;36Cl/35Cl;uncert_36/35
 meteorite_1;0.04896829;0.34554;6.22E-12;3.4627
 meteorite_2;0.039570778;0.33297;3.45E-12;3.6785"></textarea>
     <div class="controls">
@@ -395,7 +394,7 @@ meteorite_3;0.702;0.298
 meteorite_4;0.924;0.076
 meteorite_5;0.915;0.085`;
 
-const EXAMPLE_MEAS = `Sample;metal;carrier;36Cl/35Cl;incert_36/35
+const EXAMPLE_MEAS = `Sample;metal;carrier;36Cl/35Cl;uncert_36/35
 meteorite_1;0.04896829;0.34554;6.22E-12;3.4627
 meteorite_2;0.039570778;0.33297;3.45E-12;3.6785
 meteorite_3;0.005070856;0.3439;4.75E-13;4.5
@@ -463,7 +462,7 @@ function parseCSV(text, requiredCols) {
     metal: ["metal", "m_metal", "mmetal"],
     carrier: ["carrier", "m_spike", "mspike"],
     "36cl/35cl": ["36cl/35cl", "36cl35cl", "ratio", "r"],
-    "incert_36/35": ["incert_36/35", "incert3635", "sigma_ratio", "sigmar", "dr", "uncertainty"],
+    "uncert_36/35": ["uncert_36/35", "uncert3635", "incert_36/35", "incert3635", "sigma_ratio", "sigmar", "dr", "uncertainty"],
     prod_rate: ["prod_rate", "prodrate", "asat", "a_sat"],
   };
   function colIndex(target) {
@@ -651,7 +650,7 @@ $("step2Btn").addEventListener("click", () => {
 
   let parsed;
   try {
-    parsed = parseCSV($("measInput").value, ["sample", "metal", "carrier", "36cl/35cl", "incert_36/35"]);
+    parsed = parseCSV($("measInput").value, ["sample", "metal", "carrier", "36cl/35cl", "uncert_36/35"]);
   } catch (err) {
     $("step2Error").textContent = err.message;
     return;
@@ -666,7 +665,7 @@ $("step2Btn").addEventListener("click", () => {
     const m_metal = getNum(r, "metal");
     const m_spike = getNum(r, "carrier");
     const ratio = getNum(r, "36cl/35cl");
-    const dA_pct = getNum(r, "incert_36/35");
+    const dA_pct = getNum(r, "uncert_36/35");
     let A_sat;
     if (asatSource === "step1") A_sat = step1Results.map.get(Sample);
     else if (asatSource === "column") {
