@@ -245,8 +245,7 @@ meteorite_2;0,910;0,090"></textarea>
       <h2>Terrestrial age from raw measurements</h2>
     </div>
     <p class="help" style="margin-top: 0;">
-      Mirrors <code>terr_age</code> &amp; <code>uncert</code> in <code>chlore_terr_ages/scripts/age_calculation.py</code>.
-      Converts the measured <code>36Cl/35Cl</code> ratio to <code>A_meas (dpm/kg)</code> via the spike, then propagates 1σ analytically.
+      Calculates the activity (dpm/kg) from the measured <code>36Cl/35Cl</code> ratio from Accelerator Mass Spectrometry <code></code> via the mass of the added spike (g), then propagates 1σ analytically.
     </p>
 
     <details>
@@ -353,9 +352,9 @@ Step 2 — Age and 1σ:
 Constants: Nₐ = 6.022×10²³ ; ln 2 = 0.6931… ; dA is the percent uncertainty on the 36Cl/35Cl ratio.</div>
     </details>
   </section>
-
+ 
   <footer>
-    Saturation activity from Leya &amp; Masarik (<a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1945-5100.2009.tb00788.x" target="_blank" rel="noopener">2009</a>); age calculation details in Sadaka et al. (<a href="https://onlinelibrary.wiley.com/doi/10.1111/maps.70125" target="_blank" rel="noopener">2026</a>).<br>
+    Computed 36Cl activity at saturation using model of Leya &amp; Masarik (<a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1945-5100.2009.tb00788.x" target="_blank" rel="noopener">2009</a>); Age calculation details in Sadaka et al. (<a href="https://onlinelibrary.wiley.com/doi/10.1111/maps.70125" target="_blank" rel="noopener">2026</a>).<br>
     Built with <a href="https://claude.com/claude-code" target="_blank" rel="noopener">Claude Code</a>.
   </footer>
 </main>
