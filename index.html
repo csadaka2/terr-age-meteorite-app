@@ -310,7 +310,7 @@ meteorite_2;0.910;0.090"></textarea>
       <code>Metal mass (g)</code>, <code>Carrier mass (g)</code>, <code>36Cl/35Cl</code> as the AMS atomic ratio &middot;
       <code>uncert_36/35</code> as a <strong>percent</strong> (relative uncertainty on the ratio).
       A <code>sat_act</code> column (dpm/kg) is accepted and used if you pick that source above.<br>
-      <em>Note:</em> A<sub>T</sub> (terrestrial production of <sup>36</sup>Cl) is not a per-sample column — it is set as a global constant in the section above, since it is negligible compared to A<sub>sat</sub> and A<sub>meas</sub>.
+      <em>Note:</em> A<sub>T</sub> (terrestrial production of <sup>36</sup>Cl) is not a per-sample column, it is set as a global constant in the section above, since it is negligible compared to A<sub>sat</sub> and A<sub>meas</sub>.
     </p>
     <textarea id="measInput" placeholder="Sample;metal;carrier;36Cl/35Cl;incert_36/35
 meteorite_1;0.04896829;0.34554;6.22E-12;3.4627
@@ -790,12 +790,12 @@ $("step2Download").addEventListener("click", () => {
 // ----- helpers -----
 function fmt(v, digits = 3) {
   if (v === undefined || v === null || !isFinite(v)) return "—";
-  return Number(v).toLocaleString(undefined, { maximumFractionDigits: digits });
+  return Number(v).toLocaleString('en-US', { maximumFractionDigits: digits });
 }
 function fmtSci(v) {
   if (!isFinite(v)) return "—";
   if (Math.abs(v) < 1e-3 || Math.abs(v) >= 1e6) return v.toExponential(3);
-  return v.toLocaleString(undefined, { maximumFractionDigits: 6 });
+  return v.toLocaleString('en-US', { maximumFractionDigits: 6 });
 }
 function fmtCsv(v) {
   if (v === undefined || v === null || !isFinite(v)) return "";
