@@ -22,4 +22,4 @@ Constants and formulas mirror those repos (`T½ = 301,000 yr`, `σT½ = 1,500 yr
 
 ## Running locally
 
-Open `index.html` in any modern browser. That's it.
+Open `index.html` in any modern browser.
